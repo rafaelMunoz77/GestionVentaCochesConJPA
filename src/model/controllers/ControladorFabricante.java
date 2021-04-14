@@ -13,6 +13,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
 
+import model.Coche;
 import model.Fabricante;
 
 public class ControladorFabricante {
@@ -119,26 +120,24 @@ public class ControladorFabricante {
 	 * 
 	 * @return
 	 */
-	public void nuevo (Fabricante c) {
-		EntityManager em = factory.createEntityManager();
-		em.getTransaction().begin();
-		em.persist(c);
-		em.getTransaction().commit();
-		em.close();
-	}
-
-
-	
-	/**
-	 * 
-	 * @return
-	 */
-	public void modificar (Fabricante c) {
-		EntityManager em = factory.createEntityManager();
-		em.getTransaction().begin();
-		em.merge(c);
-		em.getTransaction().commit();
-		em.close();
+	public boolean guardar (Fabricante f) {
+		try {
+			EntityManager em = factory.createEntityManager();
+			em.getTransaction().begin();
+			if (f.getId() == 0) {
+				em.persist(f);
+			}
+			else {
+				em.merge(f);
+			}
+			em.getTransaction().commit();
+			em.close();
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 
@@ -148,15 +147,19 @@ public class ControladorFabricante {
 	 * @param id
 	 * @return
 	 */
-	public void borrar(Fabricante c) {
+	public void borrar(Fabricante f) {
 		EntityManager em = factory.createEntityManager();
 		em.getTransaction().begin();
-		em.remove(c);
+		em.remove(f);
 		em.getTransaction().commit();
 		em.close();
 	}
 
 	
+	/**
+	 * 
+	 * @return
+	 */
 	public List<Fabricante> findAll () {
 		EntityManager em = factory.createEntityManager();
 		

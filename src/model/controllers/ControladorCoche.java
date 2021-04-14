@@ -102,26 +102,26 @@ public class ControladorCoche {
 	 * 
 	 * @return
 	 */
-	public void nuevo (Coche c) {
-		EntityManager em = factory.createEntityManager();
-		em.getTransaction().begin();
-		em.persist(c);
-		em.getTransaction().commit();
-		em.close();
+	public boolean guardar (Coche c) {
+		try {
+			EntityManager em = factory.createEntityManager();
+			em.getTransaction().begin();
+			if (c.getId() == 0) {
+				em.persist(c);
+			}
+			else {
+				em.merge(c);
+			}
+			em.getTransaction().commit();
+			em.close();
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
-
-	/**
-	 * 
-	 * @return
-	 */
-	public void modificar (Coche c) {
-		EntityManager em = factory.createEntityManager();
-		em.getTransaction().begin();
-		em.merge(c);
-		em.getTransaction().commit();
-		em.close();
-	}
 
 
 	

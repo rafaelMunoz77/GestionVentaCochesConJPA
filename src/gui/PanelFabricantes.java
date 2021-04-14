@@ -11,6 +11,7 @@ import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 
 import model.Fabricante;
+import model.controllers.ControladorCoche;
 import model.controllers.ControladorFabricante;
 
 import java.awt.Insets;
@@ -209,12 +210,13 @@ public class PanelFabricantes extends JPanel {
 	 */
 	private void guardar () {
 		cargarActualDesdePantalla();
-		// Decido si se trata de guardar un registro existente o nuevo
-		if (this.actual.getId() != 0) { // Modificación
-			ControladorFabricante.getInstance().modificar(this.actual);
+		boolean resultado = ControladorFabricante.getInstance().guardar(this.actual);
+		if (resultado == true && this.actual != null && this.actual.getId() > 0) {
+			this.jtfId.setText("" + this.actual.getId());
+			JOptionPane.showMessageDialog(null, "Registro guardado correctamente");
 		}
-		else { // Alta -  nuevo
-			ControladorFabricante.getInstance().nuevo(this.actual);
+		else {
+			JOptionPane.showMessageDialog(null, "Error al guardar");
 		}
 	}
 	

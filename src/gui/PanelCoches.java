@@ -182,6 +182,11 @@ public class PanelCoches extends JPanel {
 		panel.add(btnGuardar);
 		
 		JButton btnNuevo = new JButton("Nuevo");
+		btnNuevo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				vaciarCampos();
+			}
+		});
 		panel.add(btnNuevo);
 		
 		JButton btnEliminar = new JButton("Eliminar");
@@ -234,8 +239,20 @@ public class PanelCoches extends JPanel {
 		this.actual.setBastidor(jtfBastidor.getText());
 		this.actual.setModelo(jtfModelo.getText());
 		this.actual.setColor(jtfColor.getText());
-		Fabricante f = ControladorFabricante.getInstance().find(((Fabricante)jcbFabricante.getSelectedItem()).getId());
+		Fabricante f = (Fabricante) jcbFabricante.getSelectedItem();
 		this.actual.setFabricante(f);
+	}
+	
+	
+	/**
+	 * 
+	 */
+	private void vaciarCampos() {
+		this.jtfId.setText("0");
+		this.jtfBastidor.setText("");
+		this.jtfModelo.setText("");
+		this.jtfColor.setText("");
+		this.jcbFabricante.setSelectedIndex(0);
 	}
 	
 	
@@ -244,16 +261,13 @@ public class PanelCoches extends JPanel {
 	 */
 	private void guardar () {
 		cargarActualDesdePantalla();
-		// Decido si se trata de guardar un registro existente o nuevo
-		if (this.actual.getId() != 0) { // Modificación
-			ControladorCoche.getInstance().modificar(this.actual);
+		boolean resultado = ControladorCoche.getInstance().guardar(this.actual);
+		if (resultado == true && this.actual != null && this.actual.getId() > 0) {
+			this.jtfId.setText("" + this.actual.getId());
+			JOptionPane.showMessageDialog(null, "Registro guardado correctamente");
 		}
-		else { // Alta -  nuevo
-//			int idNuevoReg = ControladorCoche.getInstance().nuevo(this.actual);
-//			if (idNuevoReg > 0) {
-//				this.jtfId.setText("" + idNuevoReg);
-//				JOptionPane.showMessageDialog(null, "Registro insertado correctamente");
-//			}
+		else {
+			JOptionPane.showMessageDialog(null, "Error al guardar");
 		}
 	}
 	
